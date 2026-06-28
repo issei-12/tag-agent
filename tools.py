@@ -66,21 +66,22 @@ _VALID_SOURCES = {"danbooru", "e621", "both"}
 _MAX_LIMIT = 100
 
 
+def _resolve_source(args: dict) -> str:
+    s = str(args.get("source", "both"))
+    return s if s in _VALID_SOURCES else "both"
+
+
 def dispatch(tool_name: str, args: dict, db_path: str = db.DB_PATH) -> str:
     if tool_name == "search_tags":
         query = str(args.get("query", ""))
-        source = str(args.get("source", "both"))
-        if source not in _VALID_SOURCES:
-            source = "both"
+        source = _resolve_source(args)
         limit = min(int(args.get("limit", 20)), _MAX_LIMIT)
         result = db.search_tags(query, source=source, limit=limit, db_path=db_path)
         return json.dumps(result, ensure_ascii=False)
 
     elif tool_name == "get_tag_exact":
         name = str(args.get("name", ""))
-        source = str(args.get("source", "both"))
-        if source not in _VALID_SOURCES:
-            source = "both"
+        source = _resolve_source(args)
         result = db.get_tag_exact(name, source=source, db_path=db_path)
         return json.dumps(result, ensure_ascii=False)
 
