@@ -101,7 +101,7 @@ def get_tag_exact(
             FROM tags
             WHERE name = ?
             ORDER BY (wiki_body IS NULL) ASC
-            LIMIT 2
+            LIMIT 1
         """
         params = [name]
     else:
