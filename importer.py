@@ -99,8 +99,10 @@ def fetch_wiki(tag_name: str, sleep: float = RATE_SLEEP) -> str | None:
         if resp.status_code == 200:
             data = resp.json()
             if data and isinstance(data, list):
-                body = data[0].get("body", "")
-                return normalize_dtext(body)
+                entry = data[0]
+                if entry.get("title", "").lower() == tag_name.lower():
+                    body = entry.get("body", "")
+                    return normalize_dtext(body)
     except Exception:
         pass
     finally:
