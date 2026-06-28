@@ -46,10 +46,12 @@ def normalize_dtext(text: str) -> str | None:
 
 def import_csv(path: str, source: str, db_path: str = db.DB_PATH) -> int:
     count = 0
+    # Danbooru CSV has no header row; columns are name,category,post_count,aliases
+    fieldnames = ["name", "category", "post_count", "aliases"] if source == "danbooru" else None
     with sqlite3.connect(db_path) as conn:
         conn.execute("PRAGMA journal_mode=WAL")
         with open(path, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
+            reader = csv.DictReader(f, fieldnames=fieldnames)
             for row in reader:
                 try:
                     name = row["name"].strip()
