@@ -179,7 +179,13 @@ if __name__ == "__main__":
 
     db.init_db()
 
-    if args[0] == "--wikis":
+    if args[0] == "--wikis-csv":
+        if len(args) < 2:
+            print("Usage: python importer.py --wikis-csv <wiki_pages.csv>")
+            sys.exit(1)
+        n = import_wiki_csv(args[1])
+        print(f"Wiki bodies loaded: {n}")
+    elif args[0] == "--wikis":
         limit = None
         source = "e621"
         i = 1
