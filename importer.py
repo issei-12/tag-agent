@@ -5,8 +5,9 @@ Primary path: DraconicDragon/dbr-e621-lists-archive CSV
 Fallback: Danbooru API (1 req/s, 500 req/h) + e621 official CSV dump
 
 Usage:
-  python importer.py <csv_path> <source>          # import CSV
-  python importer.py --wikis [--limit N] [source] # fetch wiki bodies
+  python importer.py <csv_path> <source>           # import tags CSV
+  python importer.py --wikis-csv <wiki_pages.csv>  # bulk-load wiki bodies from e621 dump
+  python importer.py --wikis [--limit N] [source]  # fetch wiki bodies via API
 """
 
 import csv
