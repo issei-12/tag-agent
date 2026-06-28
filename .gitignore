@@ -23,5 +23,8 @@ Thumbs.db
 .vscode/
 .idea/
 
+# OMC (oh-my-claudecode) local state
+.omc/
+
 # Logs
 *.log
