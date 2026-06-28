@@ -77,6 +77,29 @@ def import_csv(path: str, source: str, db_path: str = db.DB_PATH) -> int:
     return count
 
 
+def import_wiki_csv(path: str, db_path: str = db.DB_PATH) -> int:
+    """Bulk-load e621 wiki bodies from wiki_pages CSV dump (faster than API)."""
+    count = 0
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("PRAGMA journal_mode=WAL")
+        with open(path, newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                title = row.get("title", "").strip()
+                body = row.get("body", "")
+                if not title or not body:
+                    continue
+                wiki = normalize_dtext(body)
+                if not wiki:
+                    continue
+                conn.execute(
+                    "UPDATE tags SET wiki_body = ? WHERE name = ? AND source = 'e621' AND wiki_body IS NULL",
+                    [wiki, title],
+                )
+                count += 1
+        conn.commit()
+    return count
+
+
 def filter_tags(db_path: str = db.DB_PATH) -> dict:
     with sqlite3.connect(db_path) as conn:
         cur1 = conn.execute("DELETE FROM tags WHERE post_count < 50")
